@@ -8,12 +8,45 @@ copies or substantial portions of the Software. -->
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script>
+    window.data6 = [];
+    window.data7 = [];
+
+    async function loadCSV(url, variableName) {
+      Papa.parse(url, {
+        download: true,        // fetches the URL for you
+        header: true,          // first row becomes object keys
+        skipEmptyLines: true,
+        dynamicTyping: true,   // "30" -> 30, "true" -> true
+        complete: (results) => {
+          window[variableName] = results.data; // array of objects
+          console.log(window[variableName]);
+        },
+        error: (err) => {
+          console.error('Failed to load CSV:', err);
+        }
+      });
+    }
+
+    loadCSV(
+      'https://raw.githubusercontent.com/Roosen57/CSV_tables/refs/heads/main/7sep.csv',
+      'data6'
+    );
+    loadCSV(
+      'https://raw.githubusercontent.com/Roosen57/CSV_tables/refs/heads/main/8sep.csv',
+      'data7'
+    );
+  </script>
   <style>
     body {
       min-width: 310px;
     	max-width: 800px;
-    	height: 400px;
+    	min-height: 800px;
       margin: 0 auto;
+    }
+    .container {
+      height: 800px;
     }
     h2 {
       font-family: Arial;
@@ -23,28 +56,243 @@ copies or substantial portions of the Software. -->
   </style>
 </head>
 <body>
-  <h2>ESP Weather Station</h2>
+  <h2>PV System</h2>
   <div id="chart-temperature" class="container"></div>
 </body>
 <script>
 var chartT = new Highcharts.Chart({
-  chart:{ renderTo : 'chart-temperature' },
-  title: { text: 'BME280 Temperature' },
-  series: [{
-    name: 'Temperature',
-    color: '#f45b5b',
+  chart:{ renderTo : 'chart-temperature', height: 800 },
+  title: { text: 'PV System' },
+  series: [
+  {
+    name: 'Ambient Temperature',
+    color: '#ff6b6b',
     showInLegend: true,
-    data: []
-  },{
-    name: 'Humidity',
-    color: '#2b908f',
-    showInLegend: true,
+    visible: false,
     data: []
   },
   {
-    name: 'Pressure',
-    color: '#90ee7e',
+    name: 'Downstream Temp - Ref PV',
+    color: '#ffa94d',
     showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Upstream Temp - Ref PV',
+    color: '#ffd43b',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Downstream Temp - CPV Hybrid',
+    color: '#69db7c',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Upstream Temp - CPV Hybrid',
+    color: '#38d9a9',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Fluid Inlet Temp - Hybrid NF',
+    color: '#3bc9db',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Fluid Delta Temp - Hybrid NF',
+    color: '#4dabf7',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Voltage - Ref PV',
+    color: '#748ffc',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Voltage - CPV Hybrid',
+    color: '#9775fa',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Current - Ref PV',
+    color: '#da77f2',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Current - CPV Hybrid',
+    color: '#f783ac',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Direct POA Irradiance - Reference',
+    color: '#e64980',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Effective Irradiance - CPV Hybrid',
+    color: '#fa5252',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Mirror Concentration Efficiency (Ceff)',
+    color: '#e8590c',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Max Power - Ref PV',
+    color: '#f08c00',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Max Power - CPV Hybrid',
+    color: '#ffd43b',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Short-Circuit Current - Ref PV',
+    color: '#82c91e',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Short-Circuit Current - CPV Hybrid',
+    color: '#37b24d',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Open-Circuit Voltage - Ref PV',
+    color: '#12b886',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Open-Circuit Voltage - CPV Hybrid',
+    color: '#15aabf',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Fill Factor - Ref PV',
+    color: '#1c7ed6',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Fill Factor - CPV Hybrid',
+    color: '#4263eb',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Power Output - Ref Normal PV',
+    color: '#7048e8',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Power Output - CPV-HNEPCM-HNF',
+    color: '#ae3ec9',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Panel Area',
+    color: '#d6336c',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Electrical Efficiency - Ref PV',
+    color: '#e03131',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Electrical Efficiency - CPV Hybrid',
+    color: '#f76707',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Mass Flow Rate - Hybrid NF',
+    color: '#2f9e44',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Specific Heat Capacity - Hybrid NF',
+    color: '#0ca678',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Thermal Power Output - CPV Hybrid',
+    color: '#0c8599',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Thermal Efficiency - CPV Hybrid',
+    color: '#1971c2',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Total Efficiency - Ref PV',
+    color: '#5f3dc4',
+    showInLegend: true,
+    visible: false,
+    data: []
+  },
+  {
+    name: 'Total Efficiency - CPV Hybrid',
+    color: '#9c36b5',
+    showInLegend: true,
+    visible: false,
     data: []
   }],
   plotOptions: {
@@ -57,11 +305,52 @@ var chartT = new Highcharts.Chart({
     dateTimeLabelFormats: { second: '%H:%M:%S' }
   },
   yAxis: {
-    title: { text: 'Temperature (Celsius)' }
+    title: { text: '' }
     //title: { text: 'Temperature (Fahrenheit)' }
   },
   credits: { enabled: false }
 });
+
+
+
+
+window.t = 4;
+setInterval(function() {
+  console.log('TEST:', window.t);
+}, 2000); // Wait for 2 seconds before logging
+
+
+
+
+setTimeout(() => {
+  setInterval(function ( ) {
+    if (!Array.isArray(window.data6) || !window.data6[4]) {
+      return;
+    }
+    var index = 1 + Math.floor(((new Date()).getTime()- 1788757200000)/30000); //  + 3600000*3  - 3600000*3
+    if (index > 962) {
+      index = 962;
+    } else if (index < 0) {
+      index = 0;
+    }
+    for (var i = 0; i < chartT.series.length; i++) {
+      const row = window.data6[index];
+      const value = Object.values(row)[i+2];
+      const y = Number(value);
+      if (Number.isFinite(y)) {
+        var x = (new Date()).getTime() + 3600000*3;
+        if(chartT.series[i].data.length > 40) {
+          chartT.series[i].addPoint([x, y], true, true, true);
+        } else {
+          chartT.series[i].addPoint([x, y], true, false, true);
+        }
+      }
+    }
+  }, 1000 ) ;
+}, 1000);
+
+
+/*
 setInterval(function ( ) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
@@ -117,5 +406,20 @@ setInterval(function ( ) {
   xhttp.open("GET", "/pressure", true);
   xhttp.send();
 }, 1000 ) ;
+*/
 </script>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
